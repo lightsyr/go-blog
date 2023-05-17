@@ -3,6 +3,7 @@ package config
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -13,12 +14,14 @@ func GetDatabaseConnection() {
 
 	var err error
 
-	DB, err = sql.Open("mysql", "root:admin@/posts?parseTime=true")
+	dsn := os.Getenv("DATABASE_URL")
+
+	DB, err = sql.Open("mysql", dsn)
 
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
-		fmt.Println("Database connection done! ✔️")
+		fmt.Println("Database connection done! ✅")
 	}
 
 	err = DB.Ping()

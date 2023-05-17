@@ -7,6 +7,7 @@ import (
 	"syrlight/go-blog/config"
 	"syrlight/go-blog/controllers"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
 
@@ -19,6 +20,7 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 }
 
 func init() {
+	godotenv.Load(".env")
 	config.GetDatabaseConnection()
 }
 
@@ -35,8 +37,11 @@ func main() {
 	e := echo.New()
 	e.Renderer = t
 
+	e.Static("/", "./public")
+
 	// Routes
 	e.GET("/", controllers.PostIndex)
+	e.POST("/posts", controllers.CreatePost)
 
 	// Boostrap
 	e.Logger.Fatal(e.Start(":3000"))
